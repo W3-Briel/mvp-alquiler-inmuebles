@@ -2,6 +2,7 @@ package ar.edu.unpaz.app.controllers;
 
 import ar.edu.unpaz.app.model.Pago;
 import ar.edu.unpaz.app.services.PagoService;
+import ar.edu.unpaz.app.services.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,8 @@ public class PagoController {
                     request.nroComprobante
             );
             return ResponseEntity.status(HttpStatus.CREATED).body(pago);
-        } catch (IllegalArgumentException | IllegalStateException e) {
+        } catch (InvalidCuotaIdException | InvalidMontoException | InvalidMethodoPagoException |
+                 InvalidComprobanteException | CuotaNotFoundException | CuotaYaPagadaException e) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -57,7 +59,7 @@ public class PagoController {
         try {
             List<Pago> pagos = pagoService.obtenerPagosPorCuota(cuotaId);
             return ResponseEntity.ok(pagos);
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidCuotaIdException | CuotaNotFoundException e) {
             return ResponseEntity.badRequest().build();
         }
     }

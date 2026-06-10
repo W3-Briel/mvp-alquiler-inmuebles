@@ -2,6 +2,7 @@ package ar.edu.unpaz.app.services;
 
 import ar.edu.unpaz.app.model.Inmueble;
 import ar.edu.unpaz.app.repositories.InmuebleRepository;
+import ar.edu.unpaz.app.services.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,7 @@ public class InmuebleService {
 
     public Inmueble crearInmueble(Inmueble inmueble) {
         if (inmueble == null) {
-            throw new IllegalArgumentException("Inmueble no puede ser null");
+            throw new InvalidInmuebleException("Inmueble no puede ser null");
         }
         return inmuebleRepository.save(inmueble);
     }
@@ -32,31 +33,31 @@ public class InmuebleService {
 
     public Optional<Inmueble> obtenerPorId(Long id) {
         if (id == null || id <= 0) {
-            throw new IllegalArgumentException("ID inválido");
+            throw new InvalidIdException("ID inválido");
         }
         return inmuebleRepository.findById(id);
     }
 
     public List<Inmueble> buscarPorDireccion(String direccion) {
         if (direccion == null || direccion.isBlank()) {
-            throw new IllegalArgumentException("Dirección no puede ser null o vacía");
+            throw new InvalidDireccionException("Dirección no puede ser null o vacía");
         }
         return inmuebleRepository.findByDireccionContainsIgnoreCase(direccion);
     }
 
     public List<Inmueble> buscarPorTipo(String tipo) {
         if (tipo == null || tipo.isBlank()) {
-            throw new IllegalArgumentException("Tipo no puede ser null o vacío");
+            throw new InvalidTipoException("Tipo no puede ser null o vacío");
         }
         return inmuebleRepository.findByTipo(tipo);
     }
 
     public Inmueble actualizarInmueble(Long id, Inmueble inmuebleActualizado) {
         if (id == null || id <= 0) {
-            throw new IllegalArgumentException("ID inválido");
+            throw new InvalidIdException("ID inválido");
         }
         if (inmuebleActualizado == null) {
-            throw new IllegalArgumentException("Inmueble actualizado no puede ser null");
+            throw new InvalidInmuebleException("Inmueble actualizado no puede ser null");
         }
         return inmuebleRepository.findById(id)
                 .map(inmueble -> {
@@ -65,15 +66,15 @@ public class InmuebleService {
                     inmueble.setPrecioTasado(inmuebleActualizado.getPrecioTasado());
                     return inmuebleRepository.save(inmueble);
                 })
-                .orElseThrow(() -> new IllegalArgumentException("Inmueble con ID " + id + " no encontrado"));
+                .orElseThrow(() -> new InmuebleNotFoundException("Inmueble con ID " + id + " no encontrado"));
     }
 
     public void eliminarInmueble(Long id) {
         if (id == null || id <= 0) {
-            throw new IllegalArgumentException("ID inválido");
+            throw new InvalidIdException("ID inválido");
         }
         if (!inmuebleRepository.existsById(id)) {
-            throw new IllegalArgumentException("Inmueble con ID " + id + " no encontrado");
+            throw new InmuebleNotFoundException("Inmueble con ID " + id + " no encontrado");
         }
         inmuebleRepository.deleteById(id);
     }

@@ -6,6 +6,7 @@ import ar.edu.unpaz.app.repositories.ContratoRepository;
 import ar.edu.unpaz.app.repositories.CuotaMensualRepository;
 import ar.edu.unpaz.app.repositories.InmuebleRepository;
 import ar.edu.unpaz.app.repositories.PersonaRepository;
+import ar.edu.unpaz.app.services.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,43 +57,43 @@ public class ContratoService {
                                   BigDecimal montoBase) {
         // Validaciones básicas
         if (inmuebleId == null || inmuebleId <= 0) {
-            throw new IllegalArgumentException("ID de inmueble inválido");
+            throw new InvalidIdException("ID de inmueble inválido");
         }
         if (propietarioId == null || propietarioId <= 0) {
-            throw new IllegalArgumentException("ID de propietario inválido");
+            throw new InvalidIdException("ID de propietario inválido");
         }
         if (inquilinoId == null || inquilinoId <= 0) {
-            throw new IllegalArgumentException("ID de inquilino inválido");
+            throw new InvalidIdException("ID de inquilino inválido");
         }
         if (fechaInicio == null || fechaFin == null) {
-            throw new IllegalArgumentException("Fechas no pueden ser null");
+            throw new InvalidFechasException("Fechas no pueden ser null");
         }
         if (fechaFin.isBefore(fechaInicio)) {
-            throw new IllegalArgumentException("Fecha fin debe ser posterior a fecha inicio");
+            throw new InvalidFechasException("Fecha fin debe ser posterior a fecha inicio");
         }
         if (montoBase == null || montoBase.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Monto base debe ser positivo");
+            throw new InvalidMontoException("Monto base debe ser positivo");
         }
 
         // Obtener inmueble y validar su disponibilidad
         Inmueble inmueble = inmuebleRepository.findById(inmuebleId)
-                .orElseThrow(() -> new IllegalArgumentException("Inmueble con ID " + inmuebleId + " no encontrado"));
+                .orElseThrow(() -> new InmuebleNotFoundException("Inmueble con ID " + inmuebleId + " no encontrado"));
 
         if (!(inmueble.getEstado() instanceof EstadoDisponible)) {
-            throw new IllegalStateException("El inmueble no está disponible. Estado actual: " + inmueble.getNombreEstado());
+            throw new InmuebleNotDisponibleException("El inmueble no está disponible. Estado actual: " + inmueble.getNombreEstado());
         }
 
         // Obtener Personas
         Persona propietario = personaRepository.findById(propietarioId)
-                .orElseThrow(() -> new IllegalArgumentException("Propietario con ID " + propietarioId + " no encontrado"));
+                .orElseThrow(() -> new PersonaNotFoundException("Propietario con ID " + propietarioId + " no encontrado"));
 
         Persona inquilino = personaRepository.findById(inquilinoId)
-                .orElseThrow(() -> new IllegalArgumentException("Inquilino con ID " + inquilinoId + " no encontrado"));
+                .orElseThrow(() -> new PersonaNotFoundException("Inquilino con ID " + inquilinoId + " no encontrado"));
 
         Persona garante = null;
         if (garanteId != null && garanteId > 0) {
             garante = personaRepository.findById(garanteId)
-                    .orElseThrow(() -> new IllegalArgumentException("Garante con ID " + garanteId + " no encontrado"));
+                    .orElseThrow(() -> new PersonaNotFoundException("Garante con ID " + garanteId + " no encontrado"));
         }
 
         // Cambiar estado del inmueble a alquilado
@@ -158,14 +159,14 @@ public class ContratoService {
 
     public Optional<Contrato> obtenerPorId(Long id) {
         if (id == null || id <= 0) {
-            throw new IllegalArgumentException("ID inválido");
+            throw new InvalidIdException("ID inválido");
         }
         return contratoRepository.findById(id);
     }
 
     public List<Contrato> obtenerPorInmueble(Long inmuebleId) {
         Inmueble inmueble = inmuebleRepository.findById(inmuebleId)
-                .orElseThrow(() -> new IllegalArgumentException("Inmueble con ID " + inmuebleId + " no encontrado"));
+                .orElseThrow(() -> new InmuebleNotFoundException("Inmueble con ID " + inmuebleId + " no encontrado"));
         return contratoRepository.findByInmueble(inmueble);
     }
 }

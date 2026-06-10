@@ -28,7 +28,7 @@ public class Inmueble {
     private BigDecimal precioTasado;
 
     @Convert(converter = EstadoInmuebleConverter.class)
-    @Column(name = "estado", columnDefinition = "VARCHAR(50) default 'DISPONIBLE'")
+    @Column(name = "estado", nullable = false)
     private EstadoInmueble estado;
 
     // Constructores

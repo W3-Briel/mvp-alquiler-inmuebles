@@ -2,6 +2,7 @@ package ar.edu.unpaz.app.controllers;
 
 import ar.edu.unpaz.app.model.Contrato;
 import ar.edu.unpaz.app.services.ContratoService;
+import ar.edu.unpaz.app.services.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +55,9 @@ public class ContratoController {
                 );
             }
             return ResponseEntity.status(HttpStatus.CREATED).body(contrato);
-        } catch (IllegalArgumentException | IllegalStateException e) {
+        } catch (InvalidIdException | InvalidFechasException | InvalidMontoException |
+                 InmuebleNotFoundException | InmuebleNotDisponibleException |
+                 PersonaNotFoundException e) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -76,7 +79,7 @@ public class ContratoController {
         try {
             Optional<Contrato> contrato = contratoService.obtenerPorId(id);
             return contrato.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidIdException e) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -89,7 +92,7 @@ public class ContratoController {
         try {
             List<Contrato> contratos = contratoService.obtenerPorInmueble(inmuebleId);
             return ResponseEntity.ok(contratos);
-        } catch (IllegalArgumentException e) {
+        } catch (InmuebleNotFoundException e) {
             return ResponseEntity.badRequest().build();
         }
     }

@@ -5,6 +5,7 @@ import ar.edu.unpaz.app.model.CuotaMensualEstado;
 import ar.edu.unpaz.app.model.Pago;
 import ar.edu.unpaz.app.repositories.CuotaMensualRepository;
 import ar.edu.unpaz.app.repositories.PagoRepository;
+import ar.edu.unpaz.app.services.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,25 +34,25 @@ public class PagoService {
     public Pago registrarPago(Long cuotaId, BigDecimal monto, String metodoPago, String nroComprobante) {
         // Validaciones
         if (cuotaId == null || cuotaId <= 0) {
-            throw new IllegalArgumentException("ID de cuota inválido");
+            throw new InvalidCuotaIdException("ID de cuota inválido");
         }
         if (monto == null || monto.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Monto del pago debe ser positivo");
+            throw new InvalidMontoException("Monto del pago debe ser positivo");
         }
         if (metodoPago == null || metodoPago.isBlank()) {
-            throw new IllegalArgumentException("Método de pago no puede ser null o vacío");
+            throw new InvalidMethodoPagoException("Método de pago no puede ser null o vacío");
         }
         if (nroComprobante == null || nroComprobante.isBlank()) {
-            throw new IllegalArgumentException("Número de comprobante no puede ser null o vacío");
+            throw new InvalidComprobanteException("Número de comprobante no puede ser null o vacío");
         }
 
         // Obtener la cuota
         CuotaMensual cuota = cuotaMensualRepository.findById(cuotaId)
-                .orElseThrow(() -> new IllegalArgumentException("Cuota con ID " + cuotaId + " no encontrada"));
+                .orElseThrow(() -> new CuotaNotFoundException("Cuota con ID " + cuotaId + " no encontrada"));
 
         // Verificar que la cuota no esté ya pagada
         if (cuota.getEstado() == CuotaMensualEstado.PAGADA) {
-            throw new IllegalStateException("La cuota ya está pagada");
+            throw new CuotaYaPagadaException("La cuota ya está pagada");
         }
 
         // Crear el pago
@@ -95,10 +96,10 @@ public class PagoService {
      */
     public List<Pago> obtenerPagosPorCuota(Long cuotaId) {
         if (cuotaId == null || cuotaId <= 0) {
-            throw new IllegalArgumentException("ID de cuota inválido");
+            throw new InvalidCuotaIdException("ID de cuota inválido");
         }
         CuotaMensual cuota = cuotaMensualRepository.findById(cuotaId)
-                .orElseThrow(() -> new IllegalArgumentException("Cuota con ID " + cuotaId + " no encontrada"));
+                .orElseThrow(() -> new CuotaNotFoundException("Cuota con ID " + cuotaId + " no encontrada"));
         return pagoRepository.findByCuota(cuota);
     }
 }

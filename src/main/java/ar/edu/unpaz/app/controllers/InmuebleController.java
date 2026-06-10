@@ -2,6 +2,7 @@ package ar.edu.unpaz.app.controllers;
 
 import ar.edu.unpaz.app.model.Inmueble;
 import ar.edu.unpaz.app.services.InmuebleService;
+import ar.edu.unpaz.app.services.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class InmuebleController {
         try {
             Inmueble nuevoInmueble = inmuebleService.crearInmueble(inmueble);
             return ResponseEntity.status(HttpStatus.CREATED).body(nuevoInmueble);
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidInmuebleException e) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -50,7 +51,7 @@ public class InmuebleController {
         try {
             Optional<Inmueble> inmueble = inmuebleService.obtenerPorId(id);
             return inmueble.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidIdException e) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -63,7 +64,7 @@ public class InmuebleController {
         try {
             List<Inmueble> inmuebles = inmuebleService.buscarPorDireccion(q);
             return ResponseEntity.ok(inmuebles);
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidDireccionException e) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -76,7 +77,7 @@ public class InmuebleController {
         try {
             List<Inmueble> inmuebles = inmuebleService.buscarPorTipo(tipo);
             return ResponseEntity.ok(inmuebles);
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidTipoException e) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -89,7 +90,7 @@ public class InmuebleController {
         try {
             Inmueble inmueble = inmuebleService.actualizarInmueble(id, inmuebleActualizado);
             return ResponseEntity.ok(inmueble);
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidIdException | InvalidInmuebleException | InmuebleNotFoundException e) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -98,11 +99,12 @@ public class InmuebleController {
      * DELETE /api/inmuebles/{id} - Eliminar un Inmueble
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarInmueble(@PathVariable Long id) {
+    public ResponseEntity<DeletionResponse> eliminarInmueble(@PathVariable Long id) {
         try {
             inmuebleService.eliminarInmueble(id);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException e) {
+            DeletionResponse resp = new DeletionResponse("Eliminación realizada correctamente");
+            return ResponseEntity.ok(resp);
+        } catch (InvalidIdException | InmuebleNotFoundException e) {
             return ResponseEntity.badRequest().build();
         }
     }
