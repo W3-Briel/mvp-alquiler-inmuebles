@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Controlador REST para la entidad Inmueble.
- */
 @RestController
 @RequestMapping("/api/inmuebles")
 public class InmuebleController {
@@ -21,9 +18,6 @@ public class InmuebleController {
     @Autowired
     private InmuebleService inmuebleService;
 
-    /**
-     * POST /api/inmuebles - Crear un nuevo Inmueble
-     */
     @PostMapping
     public ResponseEntity<Inmueble> crearInmueble(@RequestBody Inmueble inmueble) {
         try {
@@ -34,18 +28,12 @@ public class InmuebleController {
         }
     }
 
-    /**
-     * GET /api/inmuebles - Obtener todos los Inmuebles
-     */
     @GetMapping
     public ResponseEntity<List<Inmueble>> obtenerTodos() {
         List<Inmueble> inmuebles = inmuebleService.obtenerTodos();
         return ResponseEntity.ok(inmuebles);
     }
 
-    /**
-     * GET /api/inmuebles/{id} - Obtener un Inmueble por ID
-     */
     @GetMapping("/{id}")
     public ResponseEntity<Inmueble> obtenerPorId(@PathVariable Long id) {
         try {
@@ -56,9 +44,6 @@ public class InmuebleController {
         }
     }
 
-    /**
-     * GET /api/inmuebles/buscar/direccion?q=... - Buscar Inmuebles por dirección
-     */
     @GetMapping("/buscar/direccion")
     public ResponseEntity<List<Inmueble>> buscarPorDireccion(@RequestParam String q) {
         try {
@@ -69,9 +54,6 @@ public class InmuebleController {
         }
     }
 
-    /**
-     * GET /api/inmuebles/buscar/tipo?tipo=... - Buscar Inmuebles por tipo
-     */
     @GetMapping("/buscar/tipo")
     public ResponseEntity<List<Inmueble>> buscarPorTipo(@RequestParam String tipo) {
         try {
@@ -82,9 +64,6 @@ public class InmuebleController {
         }
     }
 
-    /**
-     * PUT /api/inmuebles/{id} - Actualizar un Inmueble
-     */
     @PutMapping("/{id}")
     public ResponseEntity<Inmueble> actualizarInmueble(@PathVariable Long id, @RequestBody Inmueble inmuebleActualizado) {
         try {
@@ -95,9 +74,6 @@ public class InmuebleController {
         }
     }
 
-    /**
-     * DELETE /api/inmuebles/{id} - Eliminar un Inmueble
-     */
     @DeleteMapping("/{id}")
     public ResponseEntity<DeletionResponse> eliminarInmueble(@PathVariable Long id) {
         try {

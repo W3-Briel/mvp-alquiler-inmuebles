@@ -10,9 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Servicio para gestionar Inmuebles (CRUD y búsquedas).
- */
 @Service
 @Transactional
 public class InmuebleService {

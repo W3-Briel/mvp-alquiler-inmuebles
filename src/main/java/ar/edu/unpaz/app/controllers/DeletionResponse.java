@@ -2,9 +2,6 @@ package ar.edu.unpaz.app.controllers;
 
 import java.time.LocalDate;
 
-/**
- * DTO simple para respuestas de eliminación.
- */
 public class DeletionResponse {
 
     private String fechaEliminacion;

@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Controlador REST para la entidad Persona.
- */
 @RestController
 @RequestMapping("/api/personas")
 public class PersonaController {
@@ -21,9 +18,6 @@ public class PersonaController {
     @Autowired
     private PersonaService personaService;
 
-    /**
-     * POST /api/personas - Crear una nueva Persona
-     */
     @PostMapping
     public ResponseEntity<Persona> crearPersona(@RequestBody Persona persona) {
         try {
@@ -34,18 +28,12 @@ public class PersonaController {
         }
     }
 
-    /**
-     * GET /api/personas - Obtener todas las Personas
-     */
     @GetMapping
     public ResponseEntity<List<Persona>> obtenerTodas() {
         List<Persona> personas = personaService.obtenerTodas();
         return ResponseEntity.ok(personas);
     }
 
-    /**
-     * GET /api/personas/{id} - Obtener una Persona por ID
-     */
     @GetMapping("/{id}")
     public ResponseEntity<Persona> obtenerPorId(@PathVariable Long id) {
         try {
@@ -56,9 +44,6 @@ public class PersonaController {
         }
     }
 
-    /**
-     * GET /api/personas/dni/{dni} - Obtener una Persona por DNI
-     */
     @GetMapping("/dni/{dni}")
     public ResponseEntity<Persona> obtenerPorDni(@PathVariable String dni) {
         try {
@@ -69,9 +54,6 @@ public class PersonaController {
         }
     }
 
-    /**
-     * GET /api/personas/email/{email} - Obtener una Persona por Email
-     */
     @GetMapping("/email/{email}")
     public ResponseEntity<Persona> obtenerPorEmail(@PathVariable String email) {
         try {
@@ -82,9 +64,6 @@ public class PersonaController {
         }
     }
 
-    /**
-     * PUT /api/personas/{id} - Actualizar una Persona
-     */
     @PutMapping("/{id}")
     public ResponseEntity<Persona> actualizarPersona(@PathVariable Long id, @RequestBody Persona personaActualizada) {
         try {
@@ -95,9 +74,6 @@ public class PersonaController {
         }
     }
 
-    /**
-     * DELETE /api/personas/{id} - Eliminar una Persona
-     */
     @DeleteMapping("/{id}")
     public ResponseEntity<DeletionResponse> eliminarPersona(@PathVariable Long id) {
         try {

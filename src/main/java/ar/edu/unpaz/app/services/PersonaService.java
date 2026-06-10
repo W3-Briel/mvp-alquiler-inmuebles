@@ -10,9 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Servicio para gestionar Personas (CRUD).
- */
 @Service
 @Transactional
 public class PersonaService {

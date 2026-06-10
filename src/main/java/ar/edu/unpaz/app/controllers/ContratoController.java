@@ -13,9 +13,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Controlador REST para la entidad Contrato.
- */
 @RestController
 @RequestMapping("/api/contratos")
 public class ContratoController {
@@ -23,9 +20,6 @@ public class ContratoController {
     @Autowired
     private ContratoService contratoService;
 
-    /**
-     * DTO para crear un contrato (simplifica el JSON de entrada)
-     */
     public static class CrearContratoRequest {
         public Long inmuebleId;
         public Long propietarioId;
@@ -36,9 +30,6 @@ public class ContratoController {
         public BigDecimal montoBase;
     }
 
-    /**
-     * POST /api/contratos - Crear un nuevo Contrato
-     */
     @PostMapping
     public ResponseEntity<Contrato> crearContrato(@RequestBody CrearContratoRequest request) {
         try {
@@ -62,18 +53,12 @@ public class ContratoController {
         }
     }
 
-    /**
-     * GET /api/contratos - Obtener todos los Contratos
-     */
     @GetMapping
     public ResponseEntity<List<Contrato>> obtenerTodos() {
         List<Contrato> contratos = contratoService.obtenerTodos();
         return ResponseEntity.ok(contratos);
     }
 
-    /**
-     * GET /api/contratos/{id} - Obtener un Contrato por ID
-     */
     @GetMapping("/{id}")
     public ResponseEntity<Contrato> obtenerPorId(@PathVariable Long id) {
         try {
@@ -84,9 +69,6 @@ public class ContratoController {
         }
     }
 
-    /**
-     * GET /api/contratos/inmueble/{inmuebleId} - Obtener Contratos de un Inmueble
-     */
     @GetMapping("/inmueble/{inmuebleId}")
     public ResponseEntity<List<Contrato>> obtenerPorInmueble(@PathVariable Long inmuebleId) {
         try {
