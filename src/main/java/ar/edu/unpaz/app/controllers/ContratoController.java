@@ -1,0 +1,97 @@
+package ar.edu.unpaz.app.controllers;
+
+import ar.edu.unpaz.app.model.Contrato;
+import ar.edu.unpaz.app.services.ContratoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Controlador REST para la entidad Contrato.
+ */
+@RestController
+@RequestMapping("/api/contratos")
+public class ContratoController {
+
+    @Autowired
+    private ContratoService contratoService;
+
+    /**
+     * DTO para crear un contrato (simplifica el JSON de entrada)
+     */
+    public static class CrearContratoRequest {
+        public Long inmuebleId;
+        public Long propietarioId;
+        public Long inquilinoId;
+        public Long garanteId;
+        public LocalDate fechaInicio;
+        public LocalDate fechaFin;
+        public BigDecimal montoBase;
+    }
+
+    /**
+     * POST /api/contratos - Crear un nuevo Contrato
+     */
+    @PostMapping
+    public ResponseEntity<Contrato> crearContrato(@RequestBody CrearContratoRequest request) {
+        try {
+            Contrato contrato;
+            if (request.garanteId != null) {
+                contrato = contratoService.crearContrato(
+                        request.inmuebleId, request.propietarioId, request.inquilinoId, request.garanteId,
+                        request.fechaInicio, request.fechaFin, request.montoBase
+                );
+            } else {
+                contrato = contratoService.crearContrato(
+                        request.inmuebleId, request.propietarioId, request.inquilinoId,
+                        request.fechaInicio, request.fechaFin, request.montoBase
+                );
+            }
+            return ResponseEntity.status(HttpStatus.CREATED).body(contrato);
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * GET /api/contratos - Obtener todos los Contratos
+     */
+    @GetMapping
+    public ResponseEntity<List<Contrato>> obtenerTodos() {
+        List<Contrato> contratos = contratoService.obtenerTodos();
+        return ResponseEntity.ok(contratos);
+    }
+
+    /**
+     * GET /api/contratos/{id} - Obtener un Contrato por ID
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Contrato> obtenerPorId(@PathVariable Long id) {
+        try {
+            Optional<Contrato> contrato = contratoService.obtenerPorId(id);
+            return contrato.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * GET /api/contratos/inmueble/{inmuebleId} - Obtener Contratos de un Inmueble
+     */
+    @GetMapping("/inmueble/{inmuebleId}")
+    public ResponseEntity<List<Contrato>> obtenerPorInmueble(@PathVariable Long inmuebleId) {
+        try {
+            List<Contrato> contratos = contratoService.obtenerPorInmueble(inmuebleId);
+            return ResponseEntity.ok(contratos);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+}
+
