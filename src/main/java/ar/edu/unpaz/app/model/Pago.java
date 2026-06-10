@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-/**
- * Entidad que representa un pago realizado a una cuota mensual.
- */
 @Entity
 @Table(name = "pagos")
 public class Pago {
@@ -31,7 +28,6 @@ public class Pago {
     @JoinColumn(name = "cuota_id", nullable = false)
     private CuotaMensual cuota;
 
-    // Constructores
     public Pago() {
     }
 
@@ -44,7 +40,6 @@ public class Pago {
         this.cuota = cuota;
     }
 
-    // Getters y Setters
     public Long getId() {
         return id;
     }

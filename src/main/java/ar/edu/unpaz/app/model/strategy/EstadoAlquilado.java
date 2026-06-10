@@ -5,9 +5,6 @@ import ar.edu.unpaz.app.model.exceptions.InmuebleAlreadyAlquiladoException;
 import ar.edu.unpaz.app.model.exceptions.InmuebleAlreadyEnMantenimientoException;
 import ar.edu.unpaz.app.model.exceptions.InmuebleNullException;
 
-/**
- * Estado: Alquilado
- */
 public class EstadoAlquilado implements EstadoInmueble {
 
     @Override

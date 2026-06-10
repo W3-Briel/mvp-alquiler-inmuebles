@@ -3,9 +3,6 @@ package ar.edu.unpaz.app.model.strategy;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
-/**
- * Converter para persistir el EstadoInmueble como VARCHAR en la BD y reconstruirlo.
- */
 @Converter(autoApply = false)
 public class EstadoInmuebleConverter implements AttributeConverter<EstadoInmueble, String> {
 

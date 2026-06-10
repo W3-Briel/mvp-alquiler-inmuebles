@@ -2,9 +2,6 @@ package ar.edu.unpaz.app.model;
 
 import jakarta.persistence.*;
 
-/**
- * Entidad que representa una Persona (propietario, inquilino, garante).
- */
 @Entity
 @Table(name = "personas")
 public class Persona {
@@ -25,7 +22,6 @@ public class Persona {
     @Column(nullable = false)
     private String telefono;
 
-    // Constructores
     public Persona() {
     }
 
@@ -36,7 +32,6 @@ public class Persona {
         this.telefono = telefono;
     }
 
-    // Getters y Setters
     public Long getId() {
         return id;
     }

@@ -5,9 +5,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 
-/**
- * Entidad que representa una cuota mensual de un contrato.
- */
 @Entity
 @Table(name = "cuotas_mensuales")
 public class CuotaMensual {
@@ -33,7 +30,6 @@ public class CuotaMensual {
     @OneToMany(mappedBy = "cuota", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pago> pagos = new ArrayList<>();
 
-    // Constructores
     public CuotaMensual() {
         this.estado = CuotaMensualEstado.PENDIENTE;
     }
@@ -45,7 +41,6 @@ public class CuotaMensual {
         this.estado = CuotaMensualEstado.PENDIENTE;
     }
 
-    // Getters y Setters
     public Long getId() {
         return id;
     }

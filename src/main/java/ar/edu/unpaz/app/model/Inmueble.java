@@ -7,9 +7,6 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.*;
 
-/**
- * Entidad que representa un Inmueble a alquilar.
- */
 @Entity
 @Table(name = "inmuebles")
 public class Inmueble {
@@ -31,7 +28,6 @@ public class Inmueble {
     @Column(name = "estado", nullable = false)
     private EstadoInmueble estado;
 
-    // Constructores
     public Inmueble() {
         this.estado = new EstadoDisponible();
     }
@@ -43,7 +39,6 @@ public class Inmueble {
         this.estado = new EstadoDisponible();
     }
 
-    // Métodos delegados del patrón Strategy
     public void alquilar() {
         if (estado != null) {
             estado.alquilar(this);
@@ -62,11 +57,10 @@ public class Inmueble {
         }
     }
 
-    public String getNombreEstado() {
+    public String obtenerNombreEstado() {
         return estado != null ? estado.getNombreEstado() : "DESCONOCIDO";
     }
 
-    // Getters y Setters
     public Long getId() {
         return id;
     }

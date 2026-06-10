@@ -5,9 +5,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 
-/**
- * Entidad que representa un Contrato de alquiler.
- */
 @Entity
 @Table(name = "contratos")
 public class Contrato {
@@ -44,7 +41,6 @@ public class Contrato {
     @OneToMany(mappedBy = "contrato", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CuotaMensual> cuotas = new ArrayList<>();
 
-    // Constructores
     public Contrato() {
     }
 
